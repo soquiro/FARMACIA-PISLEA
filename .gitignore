@@ -235,6 +235,12 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,visualstudiocode,node
+<<<<<<< HEAD
 # editor
 .vscode
 
+=======
+
+#Editor
+.vscode
+>>>>>>> 8dfa661103d4286123b9169c55df216348fda6dc
