@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pharmaceutical_forms', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->string('formafarmaceutica');
-           // $table->integer('estado_id');
+            $table->string('descripcion');
+
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pharmaceutical_forms');
+        Schema::dropIfExists('categories');
     }
 };

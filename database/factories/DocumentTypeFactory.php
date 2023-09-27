@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Entity>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Document_type>
  */
-class EntityFactory extends Factory
+class DocumentTypeFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class EntityFactory extends Factory
     public function definition(): array
     {
         return [
-            "descripcion"=>$this->faker->sentence(),
+            //
         ];
     }
 }
