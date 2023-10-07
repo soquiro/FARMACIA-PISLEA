@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\V1\CategoryResource;
+
 class CategoryController extends Controller
 {
     /**
@@ -13,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        // obtien un coleccion por eso usamos collection
+        return  CategoryResource::collection(Category::latest()->paginate());
     }
 
     /**
@@ -21,7 +24,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category=Category::create([
+            'descripcion' => $request['descripcion'],
+
+        ]);
+
+
     }
 
     /**
@@ -29,7 +37,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return $category;
+        return new CategoryResource($category);
     }
 
     /**
@@ -38,6 +46,12 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         //
+
+
+
+
+
+
     }
 
     /**
@@ -45,6 +59,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        // paso 1 eliminar la categoria
+        $category->delete();
+
+       //paso 2 dar  un feedback
+        return response()->json([
+            'message'=>'Success'
+            ],204);
     }
 }
