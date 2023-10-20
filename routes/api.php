@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 /*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();*/
 
-    Route::apiResource('v1/categories',App\Http\Controllers\Api\V1\CategoryController::class)
-        ->only(['index','show','destroy']);
+    Route::apiResource('v1/categories',App\Http\Controllers\Api\V1\CategoryController::class);
+       // ->only(['index','show','destroy','insert']);
+
+    Route::apiResource('v1/suppliers',App\Http\Controllers\Api\V1\SupplierController::class);
+      //  ->only(['index','show','destroy']);
+
+    Route::apiResource('v1/document_types',App\Http\Controllers\Api\V1\Document_typeController::class);
 
