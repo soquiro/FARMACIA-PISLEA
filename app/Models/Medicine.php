@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Medicine extends Model
 {
     use HasFactory;
+    protected $table='medicines';
+    protected $primaryKey='id';
+    public $timestamp=false;
+
+    public function pharmaceutical_forms()
+    {
+        return $this->belongsTo(pharmaceutical_forms::class, 'id', 'formafarmaceutica_id');
+    }
+    public function document_types()
+    {
+        return $this->belongsTo(document_types::class, 'categoria_id', 'categoriamed_id');
+    }
+
 }

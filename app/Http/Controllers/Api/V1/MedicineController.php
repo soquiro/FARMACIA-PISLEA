@@ -14,12 +14,32 @@ class MedicineController extends Controller
      */
     public function index()
     {
-        return  MedicineResource::collection(Medicine::latest()->paginate());
+       // return  MedicineResource::collection(Medicine::latest()->paginate());
+
+     //   $medicines=Medicine::all();
+        $medicines=Medicine::select('medicines.*','form.formafarmaceutica','doc.descripcion')
+        ->join('pharmaceutical_forms as form','form.id','=','medicines.formafarmaceutica_id')
+        ->join('document_types as doc','doc.id','=','medicines.categoriamed_id')
+        ->get();
+
+        if($medicines->count()>0){
+         return response()->json([
+             'status' => 200,
+             'medicines'=>$medicines
+         ],200);
+
+        }
+        else{
+         return response()->json([
+             'status' => 404,
+             'medicines'=>'No Records Found'
+         ],404);
+        }
+
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         //
@@ -28,9 +48,27 @@ class MedicineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Medicine $medicine)
+    public function show(Medicine $id)
     {
-        return new MedicineResource($medicine);
+       // return new MedicineResource($medicine);
+
+        $medicine=Medicine::find($id);
+        if ($medicine){
+            return response()->json([
+                'status' => 200,
+                'medicine'=>$medicine
+            ],200);
+        }else
+        {
+          return response()->json([
+            'status'=>404,
+            'message'=>"Registro no encotrado",
+        ],404);
+
+        }
+
+
+
     }
 
     /**
@@ -44,14 +82,32 @@ class MedicineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Medicine $medicine)
+    public function destroy(Medicine $id)
     {
-         // paso 1 eliminar la categoria
+        /* // paso 1 eliminar el medicamento
          $medicine->delete();
 
          //paso 2 dar  un feedback
           return response()->json([
               'message'=>'Success'
-              ],204);
+              ],204);*/
+              $medicine=Medicine::find($id);
+
+              if($medicine){
+                  $medicine->delete();
+
+                  return response()->json([
+                      'status'=>200,
+                      'message'=>'Registro eliminado exitosamente'
+                      ],200);
+
+              }else{
+
+                  return response()->json([
+                      'status'=>404,
+                      'message'=>'Registro no encontrado'
+                      ],404);
+
+              }
     }
 }
