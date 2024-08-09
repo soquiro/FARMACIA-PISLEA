@@ -14,6 +14,12 @@ class Medicine_entityResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'liname'=>$this->liname,
+            'nombre_generico'=>$this->nombre_generico,
+        ];
     }
+
+   
 }

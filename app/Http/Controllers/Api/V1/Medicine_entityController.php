@@ -13,7 +13,7 @@ class Medicine_entityController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
