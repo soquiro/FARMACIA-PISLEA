@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
 use App\Http\Resources\V1\MedicineResource;
+use Illuminate\Support\Facades\Validator;
 
 class MedicineController extends Controller
 {
@@ -42,7 +43,46 @@ class MedicineController extends Controller
 
     public function store(Request $request)
     {
-        //
+     // Definición de reglas de validación
+     $validator=Validator::make($request->all(),[
+        'liname' => 'required|string|max:255',
+        'nombre_generico' => 'required|string|max:255',
+        'observaciones' => 'nullable|string',
+        'formafarmaceutica_id' => 'required|exists:pharmaceutical_forms,id',
+        'categoriamed_id' => 'required|exists:document_types,id',
+
+
+    ]);
+     // Manejo de errores de validación
+    if($validator->fails()){
+        return response()->json([
+            'status'=>422,
+            'errors'=>$validator->messages()
+        ],422);
+    } else{
+           // Creación del nuevo registro en la tabla medicine_entities
+        $medicine = Medicine::create([
+            'liname' => $request['liname'],
+            'nombre_generico' => $request['nombre_generico'],
+            'observaciones' => $request['observaciones'],
+            'formafarmaceutica_id' => $request['formafarmaceutica_id'],
+            'categoriamed_id' => $request['categoriamed_id'],
+            'usr' => $request['usr'],
+            'estado_id' => $request['estado_id']
+        ]);
+
+        if ($medicine ){
+            return response()->json([
+                'status'=>200,
+                'message'=>"creado exitosamente ",
+            ]);
+        } else{
+            return response()->json([
+                'status'=>500,
+                'message'=>"Algo salio mal ",
+            ]);
+        }
+    }
     }
 
     /**
@@ -70,13 +110,83 @@ class MedicineController extends Controller
 
 
     }
+    public function edit($id)
+    {
+       // Busca el registro por ID
+        $medicine = Medicine::find($id);
+        // Verifica si el registro fue encontrado
+        if ($medicine){
+               // Retorna el registro encontrado para su edición
+            return response()->json([
+                'status' => 200,
+                'medicine'=>$medicine
+            ],200);// Código 200 para éxito
+        }else
+        {
+          return response()->json([
+            'status'=>404,
+            'message'=>"Registro no encotrado",
+        ],404);// Código 404 para recurso no encontrado
 
+        }
+
+    }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Medicine $medicine)
+    public function update(Request $request, int $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            'liname' => 'required|string|max:255',
+            'nombre_generico' => 'required|string|max:255',
+            'observaciones' => 'nullable|string',
+            'formafarmaceutica_id' => 'required|exists:pharmaceutical_forms,id',
+            'categoriamed_id' => 'required|exists:document_types,id',
+
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'status'=>422,
+                'errors'=>$validator->messages()
+            ],422);
+        } else{
+               // Busca el registro por ID
+            $medicine = Medicine::find($id);
+            if ($medicine){
+                $medicine->update([
+                    'liname' => $request['liname'],
+                    'nombre_generico' => $request['nombre_generico'],
+                    'observaciones' => $request['observaciones'],
+                    'formafarmaceutica_id' => $request['formafarmaceutica_id'],
+                    'categoriamed_id' => $request['categoriamed_id'],
+                    'usr' => $request['usr'],
+                    'estado_id' => $request['estado_id']
+                     ]);
+                return response()->json([
+                    'status'=>200,
+                    'message'=>"Registro actualizado exitosamente ",
+                ],200);
+            }
+            else{
+                return response()->json([
+                    'status'=>404,
+                    'message'=>"Registro no encontrado",
+                ],404);
+            }
+
+
+            if ($medicine){
+                return response()->json([
+                    'status'=>200,
+                    'message'=>"creado exitosamente ",
+                ]);
+            } else{
+                return response()->json([
+                    'status'=>500,
+                    'message'=>"Algo salio mal ",
+                ]);
+            }
+        }
     }
 
     /**
@@ -84,13 +194,7 @@ class MedicineController extends Controller
      */
     public function destroy(Medicine $id)
     {
-        /* // paso 1 eliminar el medicamento
-         $medicine->delete();
 
-         //paso 2 dar  un feedback
-          return response()->json([
-              'message'=>'Success'
-              ],204);*/
               $medicine=Medicine::find($id);
 
               if($medicine){

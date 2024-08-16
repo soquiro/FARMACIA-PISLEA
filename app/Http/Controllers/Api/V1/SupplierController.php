@@ -178,7 +178,7 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Supplier $id)
+    public function destroy($id)
     {
        // paso 1 eliminar la categoria
        $supplier=Supplier::find($id);
