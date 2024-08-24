@@ -23,15 +23,15 @@ return new class extends Migration
             $table->string('observaciones');
             $table->unsignedInteger('estado_id');
             $table->integer('usuario');
-            $table->integer('item_id');
-            $table->integer('egresodetalle__id')->nullable(); /*codigo del egreso reingresado*/
+            $table->integer('item_id')->nullable();
+            $table->integer('egresodetalle_id')->nullable(); /*codigo del egreso reingresado*/
 
 
             $table->timestamps();
 
             $table->foreign ('ingreso_id')->references('id')->on('entries');
             $table->foreign ('med_entidad_id')->references('id')->on('medicine_entities');
-
+            $table->foreign ('egresodetalle_id')->references('id')->on('discharge_details');
 
 
 

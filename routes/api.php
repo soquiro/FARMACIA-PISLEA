@@ -27,3 +27,4 @@ use Illuminate\Support\Facades\Route;
 
     Route::apiResource('v1/medicines',App\Http\Controllers\Api\V1\MedicineController::class);
     Route::apiResource('v1/medicine_entities',App\Http\Controllers\Api\V1\Medicine_entityController::class);
+    Route::apiResource('v1/entries',App\Http\Controllers\Api\V1\EntryController::class);
