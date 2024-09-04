@@ -12,6 +12,8 @@ class Medicine extends Model
     protected $primaryKey='id';
     public $timestamp=false;
 
+  //  protected $fillable = ['liname', 'nombre_generico', 'forma_farmaceutica'];
+
     public function pharmaceutical_forms()
     {
         return $this->belongsTo(pharmaceutical_forms::class, 'id', 'formafarmaceutica_id');

@@ -16,20 +16,21 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedTinyInteger('entidad_id');
             $table->unsignedInteger('tipo_documento_id');
-            $table->integer('numero');
+            $table->integer('numero')->default(0);
             $table->datetime('fecha_ingreso');
             $table->unsignedInteger('proveedor_id');
             $table->integer('num_factura');
             $table->string('observaciones');
             $table->integer('usr');
             $table->integer('estado_id');
-            $table->integer('usr_mod');
-            $table->datetime('fhr_mod');
+            $table->integer('usr_mod')->nullable();
+            $table->datetime('fhr_mod')->nullable();
 
             $table->timestamps();
 
             $table->foreign ('tipo_documento_id')->references('id')->on('document_types');
             $table->foreign('entidad_id')->references('id')->on('entities');
+            $table->foreign ('proveedor_id')->references('id')->on('suppliers');
 
 
         });

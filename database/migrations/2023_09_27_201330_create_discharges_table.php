@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('observaciones');
             $table->integer('usr');
             $table->integer('estado_id');
-            $table->integer('usr_mod');
-            $table->datetime('fhr_mod');
+            $table->integer('usr_mod')->nullable();
+            $table->datetime('fhr_mod')->nullable();
 
             $table->timestamps();
 

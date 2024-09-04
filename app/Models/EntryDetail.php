@@ -16,6 +16,7 @@ class EntryDetail extends Model
     'cantidad',
     'costo_unitario',
     'costo_total',
+    'stock_actual',
     'observaciones',
     'estado_id',
     'usuario',
@@ -31,6 +32,12 @@ class EntryDetail extends Model
     {
         return $this->hasMany(DischargeDetail::class, 'ingreso_detalle_id');
     }
+
+    public function medicineEntity()
+    {
+        return $this->belongsTo(MedicineEntity::class, 'med_entidad_id');
+    }
+
     public function medicine()
     {
         return $this->belongsTo(Medicine::class, 'med_entidad_id');

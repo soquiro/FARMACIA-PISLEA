@@ -20,7 +20,7 @@ class DischargeFactory extends Factory
 
             'fecha_egreso'=>$this->faker->dateTimeBetween('-1 week', 'now'),
             'entidad_id'=>rand(1,2),
-            'tipo_documento_id'=>rand(1,6),
+            'tipo_documento_id'=>rand(7,11),
             'numero'=>$this->faker->numberBetween(1,200),
             'receta_id'=>rand(1,500),
            // 'servicio_id'=>rand(1,15),

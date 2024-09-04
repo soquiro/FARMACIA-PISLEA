@@ -44,10 +44,10 @@ class DatabaseSeeder extends Seeder
 
            \App\Models\MedicineEntity::factory()->count(700)->create();
            \App\Models\MedicinePackage::factory()->count(139)->create();
-           \App\Models\Entry::factory()->count(200)->create();
-           \App\Models\EntryDetail::factory()->count(200)->create();
-           \App\Models\Discharge::factory()->count(200)->create();
-           \App\Models\DischargeDetail::factory()->count(200)->create();
+           \App\Models\Entry::factory()->count(100)->create();
+           \App\Models\EntryDetail::factory()->count(100)->create();
+           \App\Models\Discharge::factory()->count(100)->create();
+           \App\Models\DischargeDetail::factory()->count(100)->create();
 
 
     }
