@@ -15,7 +15,37 @@ class Document_typeController extends Controller
      */
     public function index()
     {
-        return  Document_typeResource::collection(Document_type::latest()->paginate());
+        //return  Document_typeResource::collection(Document_type::latest()->paginate());
+        $documentTypes = Document_Type::with('category:id,descripcion')
+            ->select('id', 'categoria_id', 'descripcion', 'cod_servicio', 'usr', 'estado_id')
+            ->get()
+            ->map(function ($documentType) {
+                return [
+                    'id' => $documentType->id,
+                    'categoria_id' => $documentType->categoria_id,
+                    'categoria' => $documentType->category ? $documentType->category->descripcion : null,
+                    'descripcion' => $documentType->descripcion,
+                    'cod_servicio' => $documentType->cod_servicio,
+                    'usr' => $documentType->usr,
+                    'estado_id' => $documentType->estado_id,
+                ];
+            });
+
+
+        if($documentTypes->count()>0){
+            return response()->json([
+                'status' => 200,
+                'documentTypes'=>$documentTypes
+            ],200);
+
+           }
+           else{
+            return response()->json([
+                'status' => 404,
+                'documentTypes'=>'No Records Found'
+            ],404);
+           }
+
     }
 
     /**

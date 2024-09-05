@@ -13,4 +13,8 @@ class Category extends Model
         'descripcion' ,
 
     ];
+    public function documentTypes()
+    {
+        return $this->hasMany(Document_Type::class, 'categoria_id');
+    }
 }

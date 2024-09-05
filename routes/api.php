@@ -29,3 +29,4 @@ use Illuminate\Support\Facades\Route;
     Route::apiResource('v1/medicine_entities',App\Http\Controllers\Api\V1\Medicine_entityController::class);
     Route::apiResource('v1/entries',App\Http\Controllers\Api\V1\EntryController::class);
     Route::apiResource('v1/discharges',App\Http\Controllers\Api\V1\DischargeController::class);
+    Route::apiResource('v1/pharmaceuticalForms',App\Http\Controllers\Api\V1\PharmaceuticalFormController::class);
