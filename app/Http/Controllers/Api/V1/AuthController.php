@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -48,7 +48,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'status'=>false,
-                'errors'=>$validator->error()->all()
+                'errors'=>$validator->errors()->all()
             ],400);
         }
         if (!Auth::attempt($request->only('email','password'))){
@@ -67,6 +67,23 @@ class AuthController extends Controller
 
 
     }
+    public function getUserInfo()
+{
+    // Verifica si el usuario está autenticado
+    if (auth()->check()) {
+        $user = auth()->user(); // Obtiene el usuario autenticado
+        return response()->json([
+            'status' => true,
+            'message' => 'Información del usuario obtenida con éxito',
+            'data' => $user
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => false,
+            'message' => 'No autorizado',
+        ], 401);
+    }
+}
     public function logout(){
          // Verifica si el usuario está autenticado
     if (auth()->check()) {
@@ -95,14 +112,11 @@ class AuthController extends Controller
         ], 401);
     }
 
-        /* auth()->user()->tokens()->delete();
-        return response()->json([
-            'status'=>true,
-            'message'=>'Usuario salio satisfactoriamente',
 
-        ],200);*/
 
     }
+
+
 
 
 }
