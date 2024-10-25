@@ -13,7 +13,7 @@ class MedicineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    /*public function index()
     {
        // return  MedicineResource::collection(Medicine::latest()->paginate());
 
@@ -38,7 +38,47 @@ class MedicineController extends Controller
         }
 
 
+    }*/
+    public function index(Request $request)
+{
+    // Obtener los parámetros de consulta
+    $nombre_generico = $request->query('nombre_generico');
+    $formafarmaceutica_id = $request->query('formafarmaceutica_id');
+    $categoriamed_id = $request->query('categoriamed_id');
+
+    // Construir la consulta base
+    $query = Medicine::select('medicines.*', 'form.formafarmaceutica', 'doc.descripcion')
+        ->join('pharmaceutical_forms as form', 'form.id', '=', 'medicines.formafarmaceutica_id')
+        ->join('document_types as doc', 'doc.id', '=', 'medicines.categoriamed_id');
+
+    // Aplicar filtros según los parámetros
+    if ($nombre_generico) {
+        $query->where('medicines.nombre_generico', 'like', "%$nombre_generico%");
     }
+
+    if ($formafarmaceutica_id) {
+        $query->where('medicines.formafarmaceutica_id', $formafarmaceutica_id);
+    }
+
+    if ($categoriamed_id) {
+        $query->where('medicines.categoriamed_id', $categoriamed_id);
+    }
+
+    // Paginación de resultados
+    $medicines = $query->latest()->paginate();
+
+    if ($medicines->count() > 0) {
+        return response()->json([
+            'status' => 200,
+            'medicines' => $medicines
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => 404,
+            'medicines' => 'No Records Found'
+        ], 404);
+    }
+}
 
 
     public function store(Request $request)

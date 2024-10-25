@@ -40,9 +40,15 @@ class SupplierController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'nombre' =>'required |string|max:300',
-            'nit' =>'required |number|max:18',
+            'nit' =>'required|integer',
 
         ]);
+        return response()->json([
+            'data'=>$request,
+
+            'status'=>422,
+            'errors'=>$validator->messages()
+        ],422);
         if($validator->fails()){
             return response()->json([
                 'status'=>422,

@@ -23,13 +23,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-       \App\Models\User::factory()->count(10)->create();
+       //\App\Models\User::factory()->count(10)->create();
        \App\Models\Supplier::factory()->count(30)->create();
 
 
       Schema::disableForeignKeyConstraints();
 
        $classes =[PharmaceuticalFormSeeder::class,
+                UserSeeder::class,
                 CategorySeeder::class,
                 EntitySeeder::class,
                 DocumentTypeSeeder::class,
