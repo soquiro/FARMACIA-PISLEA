@@ -28,7 +28,7 @@ class CategoryController extends Controller
        else{
         return response()->json([
             'status' => 404,
-            'categories'=>'No Records Found'
+            'categories'=>'No se encontraron registros'
         ],404);
        }
     }
@@ -153,7 +153,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        // paso 1 eliminar la categoria
+
         $category=Category::find($id);
 
         if($category){
@@ -173,7 +173,6 @@ class CategoryController extends Controller
 
         }
 
-       //paso 2 dar  un feedback
 
     }
 }

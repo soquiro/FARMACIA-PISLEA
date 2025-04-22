@@ -7,15 +7,22 @@ use App\Models\MedicineEntity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class Medicine_entityController extends Controller
+class MedicineEntityController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $medicineEntities=MedicineEntity::select('medicines.id',
-        'medicines.liname',
+    public function index(Request $request)
+    { // Obtener los parámetros de consulta
+        $liname= $request->query('liname');
+        $nombre_generico = $request->query('nombre_generico');
+        $formafarmaceutica_id = $request->query('formafarmaceutica_id');
+        $categoriamed_id = $request->query('categoriamed_id');
+
+
+       $query=MedicineEntity::select('medicines.id',
+       'medicine_entities.id',
+       'medicines.liname',
         'medicines.nombre_generico',
         'pharmaceutical_forms.formafarmaceutica',
         'medicine_entities.stockmax',
@@ -23,26 +30,47 @@ class Medicine_entityController extends Controller
         'medicine_entities.darmax',
         'medicine_entities.darmin',
         'document_types.descripcion as categoria',
-        'entities.descripcion as entidad'
+        'entities.descripcion as entidad',
+        'users.name as user',
+        'medicine_entities.created_at',
         )
         ->join('medicines', 'medicine_entities.medicamento_id', '=', 'medicines.id')
         ->join('pharmaceutical_forms', 'medicines.formafarmaceutica_id', '=', 'pharmaceutical_forms.id')
         ->join('document_types', 'medicines.categoriamed_id', '=', 'document_types.id')
         ->join('entities', 'medicine_entities.entidad_id', '=', 'entities.id')
-        ->get();
+        ->join('users', 'medicine_entities.usr', '=', 'users.id');
 
 
-        if($medicineEntities->count()>0){
+ // Aplicar filtros según los parámetros
+    // Aplicar filtros
+    $query->when($liname, function ($q) use ($liname) {
+        $q->where('medicines.liname', 'like', "%{$liname}%");
+    });
+
+    $query->when($nombre_generico, function ($q) use ($nombre_generico) {
+        $q->where('medicines.nombre_generico', 'like', "%{$nombre_generico}%");
+    });
+
+    $query->when($formafarmaceutica_id, function ($q) use ($formafarmaceutica_id) {
+        $q->where('medicines.formafarmaceutica_id', $formafarmaceutica_id);
+    });
+
+    $query->when($categoriamed_id, function ($q) use ($categoriamed_id) {
+        $q->where('medicines.categoriamed_id', $categoriamed_id);
+    });
+    $medicineEntities = $query->get();
+
+    if($medicineEntities->count()>0){
          return response()->json([
              'status' => 200,
-             'medicines'=>$medicineEntities
+             'medicineEntities'=>$medicineEntities
          ],200);
 
         }
         else{
          return response()->json([
              'status' => 404,
-             'medicines'=>'No Records Found'
+             'medicineEntities'=>'No Records Found'
          ],404);
         }
 

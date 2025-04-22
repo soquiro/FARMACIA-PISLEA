@@ -74,7 +74,7 @@ class AuthController extends Controller
         $user = auth()->user(); // Obtiene el usuario autenticado
         return response()->json([
             'status' => true,
-            'message' => 'Información del usuario obtenida con éxito',
+            'message' => 'Informacion del usuario obtenida con exito',
             'data' => $user
         ], 200);
     } else {

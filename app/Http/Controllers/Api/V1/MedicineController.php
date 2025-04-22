@@ -10,38 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MedicineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    /*public function index()
-    {
-       // return  MedicineResource::collection(Medicine::latest()->paginate());
-
-     //   $medicines=Medicine::all();
-        $medicines=Medicine::select('medicines.*','form.formafarmaceutica','doc.descripcion')
-        ->join('pharmaceutical_forms as form','form.id','=','medicines.formafarmaceutica_id')
-        ->join('document_types as doc','doc.id','=','medicines.categoriamed_id')
-        ->get();
-
-        if($medicines->count()>0){
-         return response()->json([
-             'status' => 200,
-             'medicines'=>$medicines
-         ],200);
-
-        }
-        else{
-         return response()->json([
-             'status' => 404,
-             'medicines'=>'No Records Found'
-         ],404);
-        }
-
-
-    }*/
+    
     public function index(Request $request)
 {
     // Obtener los parámetros de consulta
+    $liname= $request->query('liname');
     $nombre_generico = $request->query('nombre_generico');
     $formafarmaceutica_id = $request->query('formafarmaceutica_id');
     $categoriamed_id = $request->query('categoriamed_id');
@@ -52,19 +25,23 @@ class MedicineController extends Controller
         ->join('document_types as doc', 'doc.id', '=', 'medicines.categoriamed_id');
 
     // Aplicar filtros según los parámetros
-    if ($nombre_generico) {
-        $query->where('medicines.nombre_generico', 'like', "%$nombre_generico%");
-    }
+    // Aplicar filtros
+    $query->when($liname, function ($q) use ($liname) {
+        $q->where('liname', 'like', "%{$liname}%");
+    });
 
-    if ($formafarmaceutica_id) {
-        $query->where('medicines.formafarmaceutica_id', $formafarmaceutica_id);
-    }
+    $query->when($nombre_generico, function ($q) use ($nombre_generico) {
+        $q->where('medicines.nombre_generico', 'like', "%{$nombre_generico}%");
+    });
 
-    if ($categoriamed_id) {
-        $query->where('medicines.categoriamed_id', $categoriamed_id);
-    }
+    $query->when($formafarmaceutica_id, function ($q) use ($formafarmaceutica_id) {
+        $q->where('medicines.formafarmaceutica_id', $formafarmaceutica_id);
+    });
 
-    // Paginación de resultados
+    $query->when($categoriamed_id, function ($q) use ($categoriamed_id) {
+        $q->where('medicines.categoriamed_id', $categoriamed_id);
+    });
+  
     $medicines = $query->latest()->paginate();
 
     if ($medicines->count() > 0) {
@@ -97,7 +74,7 @@ class MedicineController extends Controller
     if($validator->fails()){
         return response()->json([
             'status'=>422,
-            'errors'=>$validator->messages()
+            'errors' => $validator->errors()
         ],422);
     } else{
            // Creación del nuevo registro en la tabla medicine_entities
@@ -232,26 +209,25 @@ class MedicineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Medicine $id)
+    public function destroy( $id)
     {
+        // Buscar el registro por ID
+    $medicine = Medicine::find($id);
 
-              $medicine=Medicine::find($id);
+    if ($medicine) {
+        // Cambiar el estado a 28 (anulado)
+        $medicine->update(['estado_id' => 28]);
 
-              if($medicine){
-                  $medicine->delete();
-
-                  return response()->json([
-                      'status'=>200,
-                      'message'=>'Registro eliminado exitosamente'
-                      ],200);
-
-              }else{
-
-                  return response()->json([
-                      'status'=>404,
-                      'message'=>'Registro no encontrado'
-                      ],404);
-
-              }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Registro anulado exitosamente'
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Registro no encontrado'
+        ], 404);
+    }
+            
     }
 }

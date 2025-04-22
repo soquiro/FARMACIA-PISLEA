@@ -12,7 +12,14 @@ class Medicine extends Model
     protected $primaryKey='id';
     public $timestamp=false;
 
-  //  protected $fillable = ['liname', 'nombre_generico', 'forma_farmaceutica'];
+    protected $fillable = [
+    'liname',
+    'nombre_generico',
+    'observaciones',
+    'formafarmaceutica_id',
+    'categoriamed_id',
+    'usr',
+    'estado_id',];
 
     public function pharmaceutical_forms()
     {

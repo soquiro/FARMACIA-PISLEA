@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Http\Requests\V1\StoreSupplierRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\V1\SupplierResource;
 
@@ -19,6 +20,7 @@ class SupplierController extends Controller
 
         $suppliers=Supplier::all();
         if($suppliers->count()>0){
+
          return response()->json([
              'status' => 200,
              'suppliers'=>$suppliers
@@ -36,7 +38,7 @@ class SupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
             'nombre' =>'required |string|max:300',
@@ -81,8 +83,63 @@ class SupplierController extends Controller
             }
         }
 
-    }
+    }*/
+    public function store(StoreSupplierRequest $request)
+    {
+        $Supplier = Supplier::create($request->validated());
 
+        return response()->json([
+            'status' => true,
+            'message' => 'Tipo de documento creado exitosamente',
+            'data' => new SupplierResource($Supplier)
+        ], 201);
+
+        /*$validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:300',
+            'nit' => 'required|integer',
+            'telefono' => 'nullable|string|max:15',
+            'direccion' => 'nullable|string|max:255',
+            'persona_contacto' => 'nullable|string|max:255',
+            'celular' => 'nullable|string|max:15',
+            'email' => 'nullable|email|max:255',
+            'observaciones' => 'nullable|string',
+            'usr' => 'required|integer|exists:users,id',
+            'estado_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+
+        try {
+            $supplier = Supplier::create([
+                'nombre' => $request->nombre,
+                'nit' => $request->nit,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'persona_contacto' => $request->persona_contacto,
+                'celular' => $request->celular,
+                'email' => $request->email,
+                'observaciones' => $request->observaciones,
+                'usr' => $request->usr,
+                'estado_id' => $request->estado_id
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => "Proveedor creado exitosamente",
+                'supplier' => $supplier
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Algo salió mal al crear el proveedor"
+            ], 500);
+        }*/
+    }
     /**
      * Display the specified resource.
      */
@@ -105,7 +162,7 @@ class SupplierController extends Controller
     }
     public function edit($id)
     {
-        //return new CategoryResource($category);
+
         $supplier=Supplier::find($id);
         if ($supplier){
             return response()->json([
@@ -130,7 +187,6 @@ class SupplierController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'nombre' =>'required |string|max:300',
-          //  'nit' =>'required |number|max:18',
 
         ]);
         if($validator->fails()){

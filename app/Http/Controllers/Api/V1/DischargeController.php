@@ -16,116 +16,70 @@ class DischargeController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-          // Consulta para obtener los egresos (discharges) con sus respectivas entidades y tipos de documentos
-    $discharges = Discharge::select(
-        'discharges.id',
-        'discharges.fecha_egreso',
-        'discharges.entidad_id',
-        'entities.descripcion as entidad',
-        'discharges.tipo_documento_id',
-        'document_types.descripcion as tipo',
-        'discharges.numero',
-        'discharges.receta_id',
-        'discharges.servicio_id',
-        'discharges.proveedor_id',
-        'discharges.observaciones',
-        'discharges.usr',
-        'discharges.estado_id',
-        'discharges.usr_mod',
-        'discharges.fhr_mod'
-    )
-    ->join('entities', 'discharges.entidad_id', '=', 'entities.id')
-    ->join('document_types', 'discharges.tipo_documento_id', '=', 'document_types.id')
-    ->with(['Details' => function($query) {
-        // Consulta para obtener los detalles de cada egreso (discharge_details)
-        $query->select(
-            'discharge_details.egreso_id',
-            'discharge_details.ingreso_detalle_id',
-            'entry_details.med_entidad_id',
-            'medicine_entities.medicamento_id',
-            'medicines.liname',
-            'medicines.nombre_generico',
-            'medicines.formafarmaceutica_id',
-            'pharmaceutical_forms.formafarmaceutica',
-            'discharge_details.cantidad_solicitada',
-            'discharge_details.cantidad_entregada',
-            'discharge_details.costo_unitario',
-            'discharge_details.costo_total',
-            'discharge_details.observaciones',
-            'discharge_details.usr',
-            'discharge_details.estado_id'
+{
+    try {
+        $discharges = Discharge::select(
+            'discharges.id',
+            'discharges.fecha_egreso',
+            'discharges.entidad_id',
+            'entities.descripcion as entidad',
+            'discharges.tipo_documento_id',
+            'document_types.descripcion as tipo',
+            'discharges.numero',
+            'discharges.receta_id',
+            'discharges.servicio_id',
+            'discharges.proveedor_id',
+            'discharges.observaciones',
+            'discharges.usr',
+            'discharges.estado_id',
+            'discharges.usr_mod',
+            'discharges.fhr_mod'
         )
-        ->join('entry_details', 'entry_details.id', '=', 'discharge_details.ingreso_detalle_id')
-        ->join('medicine_entities', 'medicine_entities.id', '=', 'entry_details.med_entidad_id')
-        ->join('medicines', 'medicines.id', '=', 'medicine_entities.medicamento_id')
-        ->join('pharmaceutical_forms', 'pharmaceutical_forms.id', '=', 'medicines.formafarmaceutica_id');
-    }])
-    ->get();
-
-    // Retornar los egresos con sus detalles
-    /*return response()->json([
-        'status' => 'success',
-        'data' => $discharges
-    ], 200);*/
-
-    if( $discharges->count()>0){
-        return response()->json([
-            'status' => 200,
-            'discharges'=>$discharges
-        ],200);
-
-       }
-       else{
-        return response()->json([
-            'status' => 404,
-            'discharges'=>'No Records Found'
-        ],404);
-       }
-       /*  // Obtener los registros de discharges con la descripción del tipo_documento y detalles de los egresos
-         $discharges = Discharge::with([
-            'documentType:id,descripcion',
-            'dischargeDetails.entryDetail.medicineEntity.medicine:id,liname,nombre_generico'
-        ])
-        ->select('id', 'fecha_egreso', 'entidad_id', 'tipo_documento_id', 'numero',
-                 'receta_id', 'servicio_id', 'proveedor_id', 'observaciones',
-                 'usr', 'estado_id', 'usr_mod', 'fhr_mod')
+        ->join('entities', 'discharges.entidad_id', '=', 'entities.id')
+        ->join('document_types', 'discharges.tipo_documento_id', '=', 'document_types.id')
+        ->with(['Details' => function($query) {
+            $query->select(
+                'discharge_details.egreso_id',
+                'discharge_details.ingreso_detalle_id',
+                'entry_details.med_entidad_id',
+                'medicine_entities.medicamento_id',
+                'medicines.liname',
+                'medicines.nombre_generico',
+                'medicines.formafarmaceutica_id',
+                'pharmaceutical_forms.formafarmaceutica',
+                'discharge_details.cantidad_solicitada',
+                'discharge_details.cantidad_entregada',
+                'discharge_details.costo_unitario',
+                'discharge_details.costo_total',
+                'discharge_details.observaciones',
+                'discharge_details.usr',
+                'discharge_details.estado_id'
+            )
+            ->join('entry_details', 'entry_details.id', '=', 'discharge_details.ingreso_detalle_id')
+            ->join('medicine_entities', 'medicine_entities.id', '=', 'entry_details.med_entidad_id')
+            ->join('medicines', 'medicines.id', '=', 'medicine_entities.medicamento_id')
+            ->join('pharmaceutical_forms', 'pharmaceutical_forms.id', '=', 'medicines.formafarmaceutica_id');
+        }])
         ->get();
 
-        // Formatear los datos para incluir la información detallada de los items
-        $formattedDischarges = $discharges->map(function ($discharge) {
-            return [
-                'id' => $discharge->id,
-                'fecha_egreso' => $discharge->fecha_egreso,
-                'entidad_id' => $discharge->entidad_id,
-                'tipo_documento_id' => $discharge->tipo_documento_id,
-                'numero' => $discharge->numero,
-                'receta_id' => $discharge->receta_id,
-                'servicio_id' => $discharge->servicio_id,
-                'proveedor_id' => $discharge->proveedor_id,
-                'observaciones' => $discharge->observaciones,
-                'usr' => $discharge->usr,
-                'estado_id' => $discharge->estado_id,
-                'usr_mod' => $discharge->usr_mod,
-                'fhr_mod' => $discharge->fhr_mod,
-                'tipo_documento_descripcion' => $discharge->documentType->descripcion,
-                'detalles' => $discharge->dischargeDetails->map(function ($detail) {
-                    return [
-                        'cantidad_solicitada' => $detail->cantidad_solicitada,
-                        'cantidad_entregada' => $detail->cantidad_entregada,
-                        'costo_unitario' => $detail->costo_unitario,
-                        'costo_total' => $detail->costo_total,
-                        'observaciones' => $detail->observaciones,
-                        'usr' => $detail->usr,
-                        'estado_id' => $detail->estado_id,
-                        'liname' => $detail->entryDetail->medicine->liname,
-                        'nombre_generico' => $detail->entryDetail->medicine->nombre_generico,
-                       // 'forma_farmaceutica' => $detail->entryDetail->medicine->forma_farmaceutica,
-                    ];
-                }),
-            ];
-        });*/
+        if ($discharges->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No records found'
+            ], 404);
+        }
 
+        return response()->json([
+            'status' => 200,
+            'discharges' => $discharges
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Error retrieving discharges',
+            'error' => $e->getMessage()
+        ], 500);
+    }
 
     }
 
@@ -133,6 +87,145 @@ class DischargeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fecha_egreso' => 'required|date',
+            'entidad_id' => 'required|integer|exists:entities,id',
+            'tipo_documento_id' => 'required|integer|exists:document_types,id',
+            'receta_id' => 'required|integer',
+            'servicio_id' => 'required|integer',
+            'proveedor_id' => 'required|integer',
+            'observaciones' => 'nullable|string',
+            'usr' => 'required|integer',
+            'estado_id' => 'required|integer',
+
+            'details' => 'required|array',
+            'details.*.ingreso_detalle_id' => 'required|integer|exists:entry_details,id',
+            'details.*.cantidad_solicitada' => 'required|integer|min:1',
+            'details.*.cantidad_entregada' => 'required|integer|min:1',
+            'details.*.costo_unitario' => 'required|numeric|min:0',
+            'details.*.costo_total' => 'required|numeric|min:0',
+            'details.*.observaciones' => 'nullable|string',
+            'details.*.usr' => 'required|integer',
+            'details.*.estado_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Obtener el número secuencial para la entidad y tipo de documento
+            $numero = Discharge::where('entidad_id', $request->entidad_id)
+                ->where('tipo_documento_id', $request->tipo_documento_id)
+                ->max('numero') + 1 ?? 1;
+
+            // Crear egreso
+            $discharge = Discharge::create([
+                'fecha_egreso' => $request->fecha_egreso,
+                'entidad_id' => $request->entidad_id,
+                'tipo_documento_id' => $request->tipo_documento_id,
+                'numero' => $numero,
+                'receta_id' => $request->receta_id,
+                'servicio_id' => $request->servicio_id,
+                'proveedor_id' => $request->proveedor_id,
+                'observaciones' => $request->observaciones,
+                'usr' => $request->usr,
+                'estado_id' => $request->estado_id,
+            ]);
+
+            // Manejo de stock PEPS
+            foreach ($request->details as $detail) {
+                $this->procesarStock($detail, $discharge->id);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Egreso registrado exitosamente',
+                'data' => $discharge
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Ocurrió un error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Manejo del stock bajo el método PEPS (Primeras Entradas, Primeras Salidas).
+     */
+    private function procesarStock($detail, $dischargeId)
+    {
+        $cantidadEntregada = $detail['cantidad_entregada'];
+        $costoTotal = 0;
+
+        $entryDetail = EntryDetail::find($detail['ingreso_detalle_id']);
+
+        if (!$entryDetail) {
+            throw new \Exception("No se encontró el item con ID: " . $detail['ingreso_detalle_id']);
+        }
+
+        $stockDisponible = $entryDetail->stock_actual;
+        $cantidadSolicitada = $detail['cantidad_entregada'];
+
+        if ($stockDisponible < $cantidadSolicitada) {
+            throw new \Exception("Stock insuficiente para el item con ID: " . $detail['ingreso_detalle_id'] .
+                                 " | Stock disponible: $stockDisponible | Cantidad solicitada: $cantidadSolicitada");
+        }
+
+
+
+
+        $entryDetails = EntryDetail::where('med_entidad_id', $detail['ingreso_detalle_id'])
+            ->where('stock_actual', '>', 0)
+            ->orderBy('id', 'asc')
+            ->lockForUpdate()
+            ->get();
+
+
+
+
+        foreach ($entryDetails as $entryDetail) {
+            if ($cantidadEntregada <= 0) break;
+
+            $cantidadUtilizar = min($entryDetail->stock_actual, $cantidadEntregada);
+            $costoParcial = $entryDetail->costo_unitario * $cantidadUtilizar;
+            $costoTotal += $costoParcial;
+
+            // Actualizar stock
+            $entryDetail->decrement('stock_actual', $cantidadUtilizar);
+
+            $cantidadEntregada -= $cantidadUtilizar;
+        }
+        dd($entryDetails->stock_actual, $detail['cantidad_entregada']);
+        if ($cantidadEntregada > 0) {
+            throw new \Exception("Stock insuficiente para el item con ID: {$detail['ingreso_detalle_id']}");
+        }
+
+        // Registrar detalle del egreso
+        DischargeDetail::create([
+            'egreso_id' => $dischargeId,
+            'ingreso_detalle_id' => $detail['ingreso_detalle_id'],
+            'cantidad_solicitada' => $detail['cantidad_solicitada'],
+            'cantidad_entregada' => $detail['cantidad_entregada'],
+            'costo_unitario' => $costoTotal / $detail['cantidad_entregada'], // Costo promedio
+            'costo_total' => $costoTotal,
+            'observaciones' => $detail['observaciones'],
+            'usr' => $detail['usr'],
+            'estado_id' => $detail['estado_id'],
+        ]);
+    }
+
+
+
+   /* public function store(Request $request)
     {
         // Validación de los datos de entrada
     $validator = Validator::make($request->all(), [
@@ -260,7 +353,7 @@ class DischargeController extends Controller
         // Devolver un mensaje de error
         return response()->json(['error' => 'Error Algo salió mal', 'message' => $e->getMessage()], 500);
     }
-    }
+    }*/
 
     /**
      * Display the specified resource.
@@ -330,7 +423,91 @@ class DischargeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'fecha_egreso' => 'required|date',
+        'entidad_id' => 'required|integer|exists:entities,id',
+        'tipo_documento_id' => 'required|integer|exists:document_types,id',
+        'receta_id' => 'required|integer',
+        'servicio_id' => 'required|integer',
+        'proveedor_id' => 'required|integer',
+        'observaciones' => 'nullable|string',
+        'usr' => 'required|integer',
+        'estado_id' => 'required|integer',
+
+        'details' => 'required|array',
+        'details.*.ingreso_detalle_id' => 'required|integer|exists:entry_details,id',
+        'details.*.cantidad_solicitada' => 'required|integer|min:1',
+        'details.*.cantidad_entregada' => 'required|integer|min:1',
+        'details.*.costo_unitario' => 'required|numeric|min:0',
+        'details.*.costo_total' => 'required|numeric|min:0',
+        'details.*.observaciones' => 'nullable|string',
+        'details.*.usr' => 'required|integer',
+        'details.*.estado_id' => 'required|integer',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 422,
+            'errors' => $validator->messages()
+        ], 422);
+    }
+
+    DB::beginTransaction();
+    try {
+        $discharge = Discharge::findOrFail($id);
+
+        $discharge->update([
+            'fecha_egreso' => $request->fecha_egreso,
+            'entidad_id' => $request->entidad_id,
+            'tipo_documento_id' => $request->tipo_documento_id,
+            'receta_id' => $request->receta_id,
+            'servicio_id' => $request->servicio_id,
+            'proveedor_id' => $request->proveedor_id,
+            'observaciones' => $request->observaciones,
+            'usr' => $request->usr,
+            'estado_id' => $request->estado_id,
+        ]);
+
+        // Restaurar stock antes de actualizar
+        foreach ($discharge->details as $oldDetail) {
+            $this->revertStock($oldDetail);
+            $oldDetail->delete();
+        }
+
+        // Manejo de stock PEPS con nuevos detalles
+        foreach ($request->details as $detail) {
+            $this->procesarStock($detail, $discharge->id);
+        }
+
+        DB::commit();
+        return response()->json([
+            'message' => 'Egreso actualizado exitosamente',
+            'data' => $discharge
+        ], 200);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'error' => 'Ocurrió un error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Revertir stock al estado previo al egreso.
+ */
+private function revertStock($detail)
+{
+    $entryDetail = EntryDetail::find($detail->ingreso_detalle_id);
+    if ($entryDetail) {
+        $entryDetail->increment('stock_actual', $detail->cantidad_entregada);
+    }
+}
+
+
+    /*public function update(Request $request,$id)
     {
          // Validar los datos de entrada
     $validator = Validator::make($request->all(), [
@@ -438,7 +615,7 @@ class DischargeController extends Controller
             'message' => $e->getMessage()
         ], 500);
     }
-    }
+    }*/
 
     /**
      * Remove the specified resource from storage.

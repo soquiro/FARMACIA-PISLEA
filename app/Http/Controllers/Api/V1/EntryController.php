@@ -59,13 +59,7 @@ class EntryController extends Controller
           ];
       });
 
-      //return response()->json($result);
-
-
-
-          // Devolver los datos como JSON
-      //   return response()->json( $entries);
-
+      
       if($entries->count()>0){
         return response()->json([
             'status' => 200,
@@ -81,30 +75,10 @@ class EntryController extends Controller
        }
 
 
-       /*   // Obtener todas las entradas junto con sus detalles
-        $entries=Entry::with('details')->get();
-
-         // Devolver los datos como JSON
-      //   return response()->json( $entries);
-
-        if($entries->count()>0){
-         return response()->json([
-             'status' => 200,
-             'entries'=>$entries
-         ],200);
-
-        }
-        else{
-         return response()->json([
-             'status' => 404,
-             'entries'=>'No Records Found'
-         ],404);
-        }*/
+    
      }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -266,23 +240,7 @@ class EntryController extends Controller
         return response()->json([
             'entry' => $result
         ], 200);
-       //return response()->json($result);
-
-                                  // Buscar la entrada por su ID, cargando también los detalles relacionados
-          /*  $entry = Entry::with('details')->find($id);
-
-            // Verificar si la entrada existe
-            if (!$entry) {
-                return response()->json([
-                    'error' => 'INgreso no encontrado',
-                    'message' => 'No se encontró ingreso con el ID especificado'
-                ], 404);
-            }
-
-            // Devolver la entrada con los detalles en una respuesta JSON
-            return response()->json([
-                'entry' => $entry
-            ], 200);*/
+      
     }
 
 
@@ -477,45 +435,7 @@ class EntryController extends Controller
                  'message' => $e->getMessage()
              ], 500);
          }
-          // Buscar la entrada por su ID
-        /*  $entry = Entry::find($id);
-
-          // Verificar si la entrada existe
-          if (!$entry) {
-              return response()->json([
-                  'error' => 'Ingreso no encontrado',
-                  'message' => 'No se encontró un ingreso con el ID especificado'
-              ], 404);
-          }
-
-          // Iniciar una transacción
-          DB::beginTransaction();
-
-          try {
-              // Eliminar los detalles asociados
-              $entry->details()->delete();
-
-              // Eliminar la entrada principal
-              $entry->delete();
-
-              // Confirmar la transacción
-              DB::commit();
-
-              // Devolver una respuesta exitosa
-              return response()->json([
-                  'message' => 'Entrada y detalles eliminados exitosamente'
-              ], 200);
-
-          } catch (\Exception $e) {
-              // Revertir la transacción si ocurre un error
-              DB::rollBack();
-
-              // Devolver un mensaje de error
-              return response()->json([
-                  'error' => 'Error al eliminar el ingreso',
-                  'message' => $e->getMessage()
-              ], 500);
-          }*/
+          
         }
 }
 

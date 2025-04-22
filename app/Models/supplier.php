@@ -23,4 +23,9 @@ class Supplier extends Model
         'estado_id',
 
     ];
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'usr');
+    }
+
 }

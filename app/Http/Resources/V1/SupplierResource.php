@@ -25,6 +25,11 @@ class SupplierResource extends JsonResource
         'celular'=>$this->celular,
         'email'=>$this->email,
         'observaciones'=>$this->observaciones,
+        'usr'=>$this->usr,
+        'usuario'=>$this->user ? $this->user->name : null,
+        'estado_id' => $this->estado_id,
+
+
 
 
     ];
