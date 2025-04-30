@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Document_type;
+use App\Models\DocumentType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,14 +13,14 @@ class DocumentTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        Document_type::truncate();
+        DocumentType::truncate();
 
         $csvFile = fopen(base_path("database/data/Documentos.csv"), "r");
 
         $firstline = true;
         while (($data = fgetcsv($csvFile, 67, ";")) !== FALSE) {
             if (!$firstline) {
-                Document_type::create([
+                DocumentType::create([
                   "categoria_id" => $data['0'],
                   "descripcion" => $data['1'],
                   "cod_servicio" => $data['2'],

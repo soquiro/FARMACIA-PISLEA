@@ -38,9 +38,22 @@ class DocumentTypeController extends Controller
         ], 201);
     }
 
-    public function show(DocumentType $documentType)
+    public function show($id)
     {
-        return new DocumentTypeResource($documentType);
+
+       $documentType = DocumentType::find($id);
+
+       if (!$documentType) {
+           return response()->json([
+               'status' => false,
+               'message' => 'Registro no encontrado'
+           ], 404);
+       }
+
+       return new DocumentTypeResource($documentType);
+
+
+
     }
 
     public function update(UpdateDocumentTypeRequest $request, DocumentType $documentType)

@@ -25,8 +25,8 @@ class DischargeDetailFactory extends Factory
             'costo_unitario'=>$this->faker->randomFloat(4),
             'costo_total'=>$this->faker->randomFloat(2),
             'observaciones'=>$this->faker->text(100),
-            'usr'=>rand(1,3),
-            'estado_id'=>rand(1,3),
+            'usr'=>1,
+            'estado_id'=>rand(27,28),
 
         ];
     }

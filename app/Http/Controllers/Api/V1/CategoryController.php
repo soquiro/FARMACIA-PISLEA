@@ -37,10 +37,7 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {  /* $category=Category::create([
-            'descripcion' => $request['descripcion'],
-
-        ]);*/
+    {
         $validator=Validator::make($request->all(),[
             'descripcion' =>'required |string|max:300',
 

@@ -22,6 +22,7 @@ class DocumentTypeResource extends JsonResource
             'descripcion' => $this->descripcion,
             'cod_servicio' => $this->cod_servicio,
             'usr' => $this->usr,
+            'usuario'=>$this->user ? $this->user->name : null,
             'estado_id' => $this->estado_id,
         ];
     }

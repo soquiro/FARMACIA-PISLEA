@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Requests\V1\StoreSupplierRequest;
+use App\Http\Requests\V1\UpdateSupplierRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\V1\SupplierResource;
 
@@ -90,76 +91,22 @@ class SupplierController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Tipo de documento creado exitosamente',
+            'message' => 'Registro creado exitosamente',
             'data' => new SupplierResource($Supplier)
         ], 201);
 
-        /*$validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:300',
-            'nit' => 'required|integer',
-            'telefono' => 'nullable|string|max:15',
-            'direccion' => 'nullable|string|max:255',
-            'persona_contacto' => 'nullable|string|max:255',
-            'celular' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255',
-            'observaciones' => 'nullable|string',
-            'usr' => 'required|integer|exists:users,id',
-            'estado_id' => 'required|integer'
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 422,
-                'errors' => $validator->messages()
-            ], 422);
-        }
-
-        try {
-            $supplier = Supplier::create([
-                'nombre' => $request->nombre,
-                'nit' => $request->nit,
-                'direccion' => $request->direccion,
-                'telefono' => $request->telefono,
-                'persona_contacto' => $request->persona_contacto,
-                'celular' => $request->celular,
-                'email' => $request->email,
-                'observaciones' => $request->observaciones,
-                'usr' => $request->usr,
-                'estado_id' => $request->estado_id
-            ]);
-
-            return response()->json([
-                'status' => 200,
-                'message' => "Proveedor creado exitosamente",
-                'supplier' => $supplier
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 500,
-                'message' => "Algo salió mal al crear el proveedor"
-            ], 500);
-        }*/
     }
     /**
      * Display the specified resource.
      */
-    public function show( $id)
+    public function show( Supplier $supplier)
     {
-        $supplier=Supplier::find($id);
-        if ($supplier){
-            return response()->json([
-                'status' => 200,
-                'supplier'=>$supplier
-            ],200);
-        }else
-        {
-          return response()->json([
-            'status'=>404,
-            'message'=>"Registro no encotrado",
-        ],404);
-        }
+        return new SupplierResource($supplier);
 
     }
+
+
     public function edit($id)
     {
 
@@ -183,57 +130,16 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateSupplierRequest $request, Supplier $Supplier)
     {
-        $validator=Validator::make($request->all(),[
-            'nombre' =>'required |string|max:300',
 
-        ]);
-        if($validator->fails()){
+            $Supplier->update($request->validated());
+            $Supplier->refresh();
             return response()->json([
-                'status'=>422,
-                'errors'=>$validator->messages()
-            ],422);
-        } else{
-            $supplier=Supplier::find($id);
-            if ($supplier){
-                $supplier->update([
-                    'nombre' => $request['nombre'],
-                    'nit' => $request['nit'],
-                    'direccion' => $request['direccion'],
-                    'telefono' => $request['telefono'],
-                    'persona_contacto' => $request['persona_contacto'],
-                    'celular' => $request['celular'],
-                    'email' => $request['email'],
-                    'observaciones' => $request['observaciones'],
-                    'usr' => $request['usr'],
-                    'estado_id' => $request['estado_id']
-                ]);
-                return response()->json([
-                    'status'=>200,
-                    'message'=>"Registro actualizado exitosamente ",
-                ],200);
-            }
-            else{
-                return response()->json([
-                    'status'=>404,
-                    'message'=>"Registro no encontrado",
-                ],404);
-            }
-
-
-            if ($supplier){
-                return response()->json([
-                    'status'=>200,
-                    'message'=>"creado exitosamente ",
-                ]);
-            } else{
-                return response()->json([
-                    'status'=>500,
-                    'message'=>"Algo salio mal ",
-                ]);
-            }
-        }
+                'status' => true,
+                'message' => 'Registro actualizado exitosamente',
+                'data' => new SupplierResource($Supplier)
+            ], 200);
 
     }
 
@@ -262,5 +168,9 @@ class SupplierController extends Controller
 
         }
     }
+
+
+
+
 
 }

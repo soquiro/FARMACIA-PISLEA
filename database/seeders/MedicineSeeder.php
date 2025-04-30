@@ -25,10 +25,18 @@ class MedicineSeeder extends Seeder
                   "nombre_generico" => $data['2'],
                   "formafarmaceutica_id" => $data['3'],
                   "observaciones" => $data['4'],
-                  "estado_id" => $data['5'],
-                  "usr" => $data['6'],
+                  "stockmax"=> $data['5'],
+                  "stockmin"=> $data['6'],
+                  "darmax"=> $data['7'],
+                  "darmin"=> $data['8'],
+                  "estado_id" => $data['9'],
+                  "usr" => $data['10'],
 
                  //  "estado_id"=>rand(1,3),
+
+
+
+
                 ]);
             }
             $firstline = false;

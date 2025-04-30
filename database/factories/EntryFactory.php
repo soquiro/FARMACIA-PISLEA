@@ -36,9 +36,9 @@ class EntryFactory extends Factory
             'num_factura' => rand(1, 15),
             'observaciones' => $this->faker->text(100),
             'proveedor_id' => rand(1, 15),
-            'usr' => rand(1, 5),
-            'estado_id' => rand(1, 3),
-            'usr_mod' => rand(1, 5),
+            'usr' =>1,
+            'estado_id' => rand(27, 28),
+            'usr_mod' => 1,
             'fhr_mod' => $this->faker->dateTimeBetween('-1 week', 'now'),
         ];
     }

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('nombre_generico');
             $table->unsignedTinyInteger('formafarmaceutica_id');
             $table->string('observaciones');
+            $table->integer('stockmax');
+            $table->integer('stockmin');
+            $table->integer('darmax');
+            $table->integer('darmin');
             $table->unsignedTinyInteger('estado_id');
             $table->unsignedTinyInteger('usr');
 

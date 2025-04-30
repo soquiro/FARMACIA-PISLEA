@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
            $this->call($classes);
 
 
-           \App\Models\MedicineEntity::factory()->count(700)->create();
+
            \App\Models\MedicinePackage::factory()->count(139)->create();
            \App\Models\Entry::factory()->count(100)->create();
            \App\Models\EntryDetail::factory()->count(100)->create();

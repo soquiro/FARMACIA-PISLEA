@@ -20,7 +20,7 @@ class EntryDetailFactory extends Factory
 
     return [
         'ingreso_id' => mt_rand(1, 200),
-        'med_entidad_id' => mt_rand(1, 700),
+        'medicamento_id' => mt_rand(1, 700),
         'lote' =>$this->faker->randomNumber(6, true),
         'fecha_vencimiento' =>$this->faker->dateTimeBetween('-1 week', '+2 years'),
         'cantidad' => $cantidad,
@@ -28,8 +28,8 @@ class EntryDetailFactory extends Factory
         'costo_total' =>$this->faker->randomFloat(2, $cantidad * 0.01, $cantidad * 100), // Costo total basado en la cantidad
         'stock_actual' => $cantidad, // stock_actual igual a cantidad
         'observaciones' =>$this->faker->text(100),
-        'estado_id' => rand(1, 3),
-        'usuario' => rand(1, 3),
+        'estado_id' => rand(27, 28),
+        'usr' => 1,
         'item_id' => rand(1, 200),
     ];
 

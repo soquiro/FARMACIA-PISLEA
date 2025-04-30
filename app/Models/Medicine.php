@@ -18,16 +18,21 @@ class Medicine extends Model
     'observaciones',
     'formafarmaceutica_id',
     'categoriamed_id',
+    'stockmax',
+    'stockmin',
+    'darmax',
+    'darmin',
     'usr',
     'estado_id',];
 
-    public function pharmaceutical_forms()
+    public function pharmaceuticalForm()
     {
-        return $this->belongsTo(pharmaceutical_forms::class, 'id', 'formafarmaceutica_id');
+        return $this->belongsTo(PharmaceuticalForm::class, 'formafarmaceutica_id','id');
     }
-    public function document_types()
+    public function categoria()
     {
-        return $this->belongsTo(document_types::class, 'categoria_id', 'categoriamed_id');
+        return $this->belongsTo(DocumentType::class, 'categoriamed_id', 'id')
+                    ->where('categoria_id', 3);
     }
 
 }

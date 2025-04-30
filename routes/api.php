@@ -1,9 +1,19 @@
 <?php
-use App\Http\Controllers\api\V1\AuthController;
+
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\SupplierController;
+use App\Http\Controllers\Api\V1\DocumentTypeController;
+use App\Http\Controllers\Api\V1\PharmaceuticalFormController;
+use App\Http\Controllers\Api\V1\MedicineController;
+use App\Http\Controllers\Api\V1\MedicinePackageController;
+use App\Http\Controllers\Api\V1\EntryController;
+use App\Http\Controllers\Api\V1\DischargeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,19 +34,19 @@ use Illuminate\Support\Facades\Route;
     Route::middleware(['auth:sanctum'])->group(function(){
 
 
-        Route::apiResource('v1/categories',App\Http\Controllers\Api\V1\CategoryController::class);
+        Route::apiResource('v1/categories',CategoryController::class);
             // ->only(['index','show','destroy','insert']);
 
-        Route::apiResource('v1/suppliers',App\Http\Controllers\Api\V1\SupplierController::class);
+        Route::apiResource('v1/suppliers',SupplierController::class);
         //  ->only(['index','show','destroy']);
 
-        Route::apiResource('v1/documentTypes',App\Http\Controllers\Api\V1\DocumentTypeController::class);
+        Route::apiResource('v1/documentTypes',DocumentTypeController::class);
+        Route::apiResource('v1/pharmaceuticalForms',PharmaceuticalFormController::class);
+        Route::apiResource('v1/medicines',MedicineController::class);
+        Route::apiResource('v1/medicinePackages',MedicinePackageController::class);
+        Route::apiResource('v1/entries', EntryController::class);
+        Route::apiResource('v1/discharges',DischargeController::class);
 
-        Route::apiResource('v1/medicines',App\Http\Controllers\Api\V1\MedicineController::class);
-        Route::apiResource('v1/medicineEntities',App\Http\Controllers\Api\V1\MedicineEntityController::class);
-        Route::apiResource('v1/entries',App\Http\Controllers\Api\V1\EntryController::class);
-        Route::apiResource('v1/discharges',App\Http\Controllers\Api\V1\DischargeController::class);
-        Route::apiResource('v1/pharmaceuticalForms',App\Http\Controllers\Api\V1\PharmaceuticalFormController::class);
         Route::get('v1/auth/user', [AuthController::class, 'getUserInfo']);
         Route::get('v1/auth/logout',[AuthController::class,'logout']);
     });

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign ('documento_id')->references('id')->on('document_types');
-            $table->foreign('medicamento_id')->references('id')->on('medicine_entities');
+            $table->foreign('medicamento_id')->references('id')->on('medicines');
 
         });
     }

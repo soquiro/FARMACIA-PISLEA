@@ -17,13 +17,13 @@ class MedicinePackageFactory extends Factory
     public function definition(): array
     {
         return [
-            'documento_id'=>rand(10,30),
+            'documento_id'=>rand(38,44),
             'medicamento_id'=>rand(1,700),
             'cantidad'=>rand(10,30),
             'observaciones'=>$this->faker->text(100),
             'dias'=>rand(1,5),
-            'usr'=>rand(1,5),
-            'estado_id'=>rand(1,3),
+            'usr'=>1,
+            'estado_id'=>rand(27,28),
 
         ];
     }

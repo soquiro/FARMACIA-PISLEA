@@ -28,8 +28,8 @@ class SupplierFactory extends Factory
             "email"=> $this->faker->unique()->safeEmail(),
             "observaciones"=>$this->faker->text(100),
 
-            "usr"=>rand(1,5),
-            "estado_id"=>rand(1,3)
+            "usr"=>1,
+            "estado_id"=>rand(27,28)
         ];
     }
 }

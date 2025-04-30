@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('entry_details', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('ingreso_id')->indice();
-            $table->unsignedInteger('med_entidad_id')->indice();
+            $table->unsignedInteger('medicamento_id')->indice();
             $table->string('lote')->indice();
             $table->date('fecha_vencimiento')->indice();
             $table->integer('cantidad');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('stock_actual');//->default(0);
             $table->string('observaciones');
             $table->unsignedInteger('estado_id');
-            $table->integer('usuario');
+            $table->integer('usr');
             $table->integer('item_id')->nullable();
          //   $table->unsignedInteger('egresodetalle_id')->nullable(); /*codigo del egreso reingresado*/
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign ('ingreso_id')->references('id')->on('entries');
-            $table->foreign ('med_entidad_id')->references('id')->on('medicine_entities');
+            $table->foreign ('medicamento_id')->references('id')->on('medicines');
           //  $table->foreign ('egresodetalle_id')->references('id')->on('discharge_details');
 
 

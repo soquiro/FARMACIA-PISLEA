@@ -16,15 +16,20 @@ class MedicineResource extends JsonResource
     {
        // return parent::toArray($request);
        return[
-        'id'=>$this->id,
-        'liname'=>$this->liname,
-        'categoriamed_id'=>$this->categoriamed_id,
-        'nombre generico'=>$this->nombre_generico,
-        'formafarmaceutica_id'=>$this->formafarmaceutica_id,
-        'observaciones'=>$this->observaciones,
-        'estado_id'=>$this->estado_id,
-        'usr'=>$this->usr,
-
+        'id' => $this->id,
+        'liname' => $this->liname,
+        'nombre_generico' => $this->nombre_generico,
+        'observaciones' => $this->observaciones,
+        'formafarmaceutica_id' => $this->formafarmaceutica_id,
+        'forma_farmaceutica' => $this->pharmaceuticalForm? $this->pharmaceuticalForm->formafarmaceutica : null,
+        'categoriamed_id' => $this->categoriamed_id,
+        'categoria' => $this->categoria ? $this->categoria->descripcion : null,
+        'stockmax' => $this->stockmax,
+        'stockmin' => $this->stockmin,
+        'darmax' => $this->darmax,
+        'darmin' => $this->darmin,
+        'usr' => $this->usr,
+        'estado_id' => $this->estado_id,
 
        ];
     }
