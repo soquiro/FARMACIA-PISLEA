@@ -44,12 +44,14 @@ use App\Http\Controllers\Api\V1\DischargeController;
         Route::apiResource('v1/pharmaceuticalForms',PharmaceuticalFormController::class);
         Route::apiResource('v1/medicines',MedicineController::class);
         Route::apiResource('v1/medicinePackages',MedicinePackageController::class);
+        Route::get('v1/entries/with-stock', [EntryController::class, 'entryDetailsConStock']);
         Route::apiResource('v1/entries', EntryController::class);
+
+
         Route::apiResource('v1/discharges',DischargeController::class);
 
         Route::get('v1/auth/user', [AuthController::class, 'getUserInfo']);
         Route::get('v1/auth/logout',[AuthController::class,'logout']);
     });
-
 
 

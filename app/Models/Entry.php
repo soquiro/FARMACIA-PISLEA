@@ -24,6 +24,10 @@ class Entry extends Model
 
 
     ];
+    protected $casts = [
+        'fecha_ingreso' => 'datetime',
+        'fhr_mod' => 'datetime',
+    ];
     public function entryDetails()
     {
         return $this->hasMany(EntryDetail::class, 'ingreso_id');
